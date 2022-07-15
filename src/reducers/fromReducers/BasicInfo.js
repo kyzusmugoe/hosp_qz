@@ -1,0 +1,34 @@
+export default {
+    "jobClass":"專員",//級職
+    "unitCode":"",//通訊處代碼
+    "unitCodeName":"",//通訊處名稱
+    "employeeName":"",//姓名
+    "employeePhoto":"",//
+    "employeePhotoIsChange":0,//
+    "employeeID":"",//身分證字號
+    "highestEducation":"大學",//最高學歷
+    "employeeEmail":"",//電子信箱
+    "employeeBirthYear":"",//報聘人出生年月日
+    "employeeBirthMonth":"",//報聘人出生年月日
+    "employeeBirthDate":"",//報聘人出生年月日
+    "employeeHomePhone":"",//電話(住宅)
+    "employeeDayPhone":"",//電話(白天)
+    "employeeMobile":"",//電話(手機)
+    "employeeFex":"",//傳真
+    "domicilePostcode":"",//戶籍地址郵遞區號
+    "domicilePostcodeName":"",//戶籍地址郵遞區號
+    "domicileAddress":"",//戶籍地址
+    "mailingPostcode":"",//通訊地址郵遞區號
+    "mailingPostcodeName":"",//通訊地址郵遞區號
+    "mailingAddress":"",//通訊地址
+    "remittanceBank":"中國信託",//匯款銀行
+    "remittanceAccount":"",//匯款帳號
+    "hasFamilyName":"",//已有家屬於本公司報聘 員工姓名
+    "emergencyName":"",
+    "emergencyPhone":"",
+    "emergencyRelationship":"",
+    "heirName":"",
+    "heirPhone":"",
+    "heirRelationship":"",
+    "mailContract":0
+}
