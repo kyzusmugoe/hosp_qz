@@ -1,54 +1,44 @@
 import React,{useState, useEffect, useContext, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-//import AttachmentForm from './components/HIB-forms/AttachmentForm'
-//import Pay60Form from './components/HIB-forms/Pay60Form'
-//import ContractForm from './components/HIB-forms/ContractForm'
-//import SpecificationForm from './components/HIB-forms/SpecificationForm'
-//import ExpForm from './components/HIB-forms/ExpForm'
-//import PremiumForm from './components/HIB-forms/PremiumForm'
-//import SameIndustryForm from './components/HIB-forms/SameIndustryForm'
-import SignPad from './components/Signature'
+import styled from 'styled-components';
 import Pad from './components/Signature/Pad'
 import WebServiceContext from './webservice/WebServiceContext'
 
 
-import { makeStyles } from '@material-ui/core/styles';
-import {Stepper, Step, StepLabel, StepContent, Button, Fade, Modal, Backdrop , styled, Collapse} from '@material-ui/core/';
 
+const MainBox = styled('div')`
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+`
 
-
-
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        height: '100%',
-        paddingBottom:50
-    },
-    button: {
-        marginTop: theme.spacing(1),
-        marginRight: theme.spacing(1),
-    },
-    actionsContainer: {
-        marginBottom: theme.spacing(2),
-    },
-    resetContainer: {
-        padding: theme.spacing(3),
-    },
-    paper: {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-    },
-}));
-
-
+const PadModalBox = styled('div')`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    .container{
+        z-index: 1;
+    }
+    &::before{
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,.7);
+    }
+`
+const PrevirwMySign = styled('img')`
+    width: 100%;
+    max-width: 200px;
+`
 
 const MyApp = ()=> {
-    const classes = useStyles()
-    //const dispatch = useDispatch()
-    //const myData = useSelector(state => state)
     const webservice = useContext(WebServiceContext)
     const [postData, setPostData] = useState({})
 
@@ -57,6 +47,8 @@ const MyApp = ()=> {
     const [hospContact, setHospContact] = useState("")   
     const [hospPhone, setHospPhone] = useState("")   
 
+
+    const [openPad, setOpenPad] = useState(false)
 
     const [sign, setSign] = useState("")   
     const [qzData, setQzData] = useState(
@@ -115,9 +107,10 @@ const MyApp = ()=> {
     },[qzData])
     */
     return (      
-    <div className={classes.root}>
+    <MainBox>
+        <div>
         <div style={{width:300, display:"flex", flexDirection: "column"}}>
-            <input onChange={event=>{setUserName(event.target.value)} }placeholder='使用者名稱'/>
+            <input style={{borderWidth:1, borderColor:(userName==""?"#f00":"#666")}} value={userName} onChange={event=>{setUserName(event.target.value)} } placeholder='使用者名稱'/>
             <input onChange={event=>{setHospName(event.target.value)} }placeholder='院所名稱'/>
             <input onChange={event=>{setHospContact(event.target.value)} }placeholder='院所聯絡人/窗口'/>
             <input onChange={event=>{setHospPhone(event.target.value)} }placeholder='院所聯絡人/連絡電話'/>
@@ -201,17 +194,35 @@ const MyApp = ()=> {
                 )
             })
         }
+        <button onClick={()=>{ setOpenPad(true) }}>
+            開啟簽名
+        </button>
+        {  
+            sign !="" &&
+            <PrevirwMySign src={sign} />
+        }
+        <PadModalBox style={{display:(openPad?"flex":"none")}}>
+            <div className="container">
+            <Pad                
+                sendData={(data, tempData)=>{
+                    setSign(data)
+                }}
+                />
+                <button onClick={()=>{ setOpenPad(false) }}>
+                    完成
+                </button>
+            </div>
+        </PadModalBox>
 
-        <Pad                
-            sendData={(data, tempData)=>{
-                setSign(data)
-            }}
-        />
-
-        <Button 
-            variant="contained"
-            color="primary"
+        <button 
             onClick={()=>{
+
+                if(userName ==""){
+                    alert("您還沒有填寫名字")
+                    return
+                } 
+
+
                 let newPostData = {
                     user_name: userName,
                     hosp_name: hospName,
@@ -233,12 +244,13 @@ const MyApp = ()=> {
             }}
         >
             送出
-        </Button>
+        </button>
         
         <div style={{width:600}}>
             {JSON.stringify(postData)}
         </div>
-    </div>
+        </div>
+    </MainBox>
   );
 }
 

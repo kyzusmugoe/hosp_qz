@@ -1,22 +1,12 @@
 import React,{useState, useEffect, forwardRef, useImperativeHandle} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+//import { makeStyles } from '@material-ui/core/styles';
+//import Button from '@material-ui/core/Button';
 //import { useSelector, useDispatch } from 'react-redux';
 
 import SignatureCanvas from 'react-signature-canvas';
 
-const useStyles = makeStyles(theme => ({
-    padContainer: {
-      border: '1px solid #666',
-      backgroundColor:"#aaa",
-      textAlign:"center",
-      padding:10  
-    },
-    pad:{
-        margin:"0 auto"
-    }
-  }));
+
 
 const SignaturePad = ({defalutValue, sendData})=>{
     
@@ -24,7 +14,7 @@ const SignaturePad = ({defalutValue, sendData})=>{
     const sign_1 = useSelector(state => state.sign_1)
     const dispatch = useDispatch()
     const sigCanvas= {}
-    const classes = useStyles();
+    //const classes = useStyles();
    // const [open, setOpen] = useState(false)
     const [myPad, setMyPad] = useState()
     
@@ -39,10 +29,9 @@ const SignaturePad = ({defalutValue, sendData})=>{
     
     return(
        <div>
-            <div  className={classes.padContainer} >
+            <div  >
                 <div style={{backgroundColor:"#fff",width:600, height:400, margin:"0 auto"}}>
                     <SignatureCanvas 
-                        className={classes.pad}
                         maxWidth={8}
                         ref={(ref) => { setMyPad(ref) }}
                         penColor='black'
@@ -56,18 +45,18 @@ const SignaturePad = ({defalutValue, sendData})=>{
                     />
                 </div>
                 <div>
-                    <Button style={{margin:10}} variant="contained" color="primary" onClick={()=>{
+                    <button style={{margin:10}} onClick={()=>{
                         myPad.clear()
                         sendData("", "")//reducer的地方清除    
-                    }}>清除</Button>
-                    <Button style={{margin:10}} variant="contained" color="primary" onClick={()=>{
+                    }}>清除</button>
+                    <button style={{margin:10}}  onClick={()=>{
                         const data = myPad.toData();
                         if (data) {
                             data.pop(); // remove the last dot or line
                             myPad.fromData(data);
                             sendData(myPad.toDataURL("image/png"),  data)//reducer紀錄上一步的動作
                         }
-                    }}>復原</Button>
+                    }}>復原</button>
                                  
                 </div>
             </div>
