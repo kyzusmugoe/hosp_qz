@@ -15,11 +15,13 @@ import WebServiceContext from './webservice/WebServiceContext'
 const store = createStore(rootReducer)
 const webservice = new WebService()
 
+
+
 //webservice.login()
 ReactDOM.render(
   <Provider store={store}>
        <WebServiceContext.Provider value={webservice}>
-         <App/>
+          <App/>
        </WebServiceContext.Provider>
     </Provider>
 , document.getElementById('root'));
