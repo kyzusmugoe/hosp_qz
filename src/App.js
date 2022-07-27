@@ -13,6 +13,7 @@ import {
     HospBarButton,
     PadModalBox,
     MesgModalBox,
+    UploadModalBox,
     PrevirwMySign,
     MainBox
 } from './components/UI' 
@@ -29,9 +30,12 @@ const MyApp = ()=> {
 
     const [openPad, setOpenPad] = useState(false)
     
+    const [uploadState, setUploadState] = useState(0)
+    const [openUpload, setOpenUpload] = useState(false)
+
     const [openMesg, setOpenMesg] = useState(false)
     const [openMesgModal, setOpenMesgModal] = useState(false)
-    const [sendSwitch, setSendSwitch] = useState(true)
+    const [sendSwitch, setSendSwitch] = useState(true)      //控制不要重複傳送的開關
     useEffect(()=>{
         if(openMesg !=""){
             setOpenMesgModal(true)
@@ -313,6 +317,37 @@ const MyApp = ()=> {
                         </HospButton>                       
                     </div>
                 </MesgModalBox>
+
+                <UploadModalBox style={{ display:(openUpload?"flex":"none") }}>
+                    <div className="modal">
+
+
+                        <div>
+                            {
+                                uploadState == 0?
+                                    <img className='uploading' src="./images/loading.png"/>:
+                                    ""             
+                            }
+                        </div>
+                        <div className='alertTxt'>
+                            {
+                                uploadState == 0?
+                                "上傳中...":                   
+                                uploadState == 1 ?
+                                "上傳完成":                   
+                                uploadState == 2 ?
+                                "上傳失敗":
+                                "尚未設定"             
+                            }
+                        </div>
+                        <HospButton className='signComplete' 
+                            onClick={()=>{ 
+                                setOpenUpload(false) 
+                            }}>
+                            關閉
+                        </HospButton>                       
+                    </div>
+                </UploadModalBox>
                 
                 {
                     sign != "" && 
@@ -360,7 +395,6 @@ const MyApp = ()=> {
                                     }
                                 }
 
-                            
                                 //檢查完成
                                 setSendSwitch(false)
 
@@ -383,6 +417,16 @@ const MyApp = ()=> {
 
                                 setPostData(newPostData)
 
+                                //開始上傳
+                                setOpenUpload(true)
+                                setUploadState(0)                                
+                                /*
+                                setTimeout(() => {
+                                    setUploadState(1)                                    
+                                    setSendSwitch(true)
+                                }, 3000);
+                                */
+                                
                                 fetch('https://api.bit2.com.tw/Meningitis/getQuesData.ashx',{
                                     method: 'POST',
                                     headers: {
@@ -396,12 +440,16 @@ const MyApp = ()=> {
                                         return response.json()
                                     } 
                                 }).then(result => {
+                                    setUploadState(1)
                                     console.log(result)
                                     setSendSwitch(true)
                                 }).catch((error) => {
+                                    setUploadState(2)
                                     console.error(error);
                                     setSendSwitch(true)
                                 });
+                                
+
                             }}
                         >
                             送出

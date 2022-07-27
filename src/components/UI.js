@@ -395,6 +395,63 @@ export const MesgModalBox = styled('div')`
     }
 `
 
+export const UploadModalBox = styled('div')`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .modal{
+        background-color: #fff;
+        width: calc(100% - 50px);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        .alertTxt{
+            color: #f20;
+            margin: 20px;
+            font-size: 1.4em;
+        }       
+    }
+
+    .uploading{
+        animation-name: rotationLoading;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        @keyframes rotationLoading {
+            from { transform: rotate(0deg);}
+            to   { transform: rotate(360deg);}
+        }
+    }
+
+    &::before{
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,.7);
+        pointer-events: none;
+    }
+    animation-name: fadeIn;
+    animation-duration: .4s;
+    @keyframes fadeIn {
+        from {opacity:0}
+        to {opacity:1}
+    }
+`
+
 export const PrevirwMySign = styled('img')`
     width: 100%;
     object-fit: cover;   
