@@ -6,10 +6,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import SignatureCanvas from 'react-signature-canvas';
 
-import {HospButtom} from '../../components/UI'
+import { SignPad, HospButton } from '../../components/UI'
 
 
-const SignaturePad = ({/*defalutValue,*/ isOpen,sendData})=>{
+const SignaturePad = ({/*defalutValue,*/ isOpen, completeButton, sendData})=>{
     
 
     const sign_1 = useSelector(state => state.sign_1)
@@ -51,8 +51,8 @@ const SignaturePad = ({/*defalutValue,*/ isOpen,sendData})=>{
     */
     return(
        <div>
-            <div  >
-                <div style={{backgroundColor:"#fff",width:padWidth, height:padHeight, margin:"0 auto"}}>
+            <SignPad  >
+                <div style={{backgroundColor:"#fff",width:padWidth, height:padHeight, margin:"0 auto", borderRadius:20}}>
                     <SignatureCanvas 
                         maxWidth={8}
                         ref={(ref) => { setMyPad(ref) }}
@@ -66,22 +66,30 @@ const SignaturePad = ({/*defalutValue,*/ isOpen,sendData})=>{
                         }}
                     />
                 </div>
-                <div>
-                    <HospButtom style={{margin:10}} onClick={()=>{
-                        myPad.clear()
-                        sendData("", "")//reducer的地方清除    
-                    }}>清除</HospButtom>
-                    <HospButtom style={{margin:10}}  onClick={()=>{
-                        const data = myPad.toData();
-                        if (data) {
-                            data.pop(); // remove the last dot or line
-                            myPad.fromData(data);
-                            sendData(myPad.toDataURL("image/png"),  data)//reducer紀錄上一步的動作
+                <div className='btnBox'>
+
+                    <div className='leftBtnBox'>
+                        <HospButton className='clearAll' onClick={()=>{
+                            myPad.clear()
+                            sendData("", "")//reducer的地方清除    
+                        }}>清除</HospButton>
+                        <HospButton className='backStep' onClick={()=>{
+                            const data = myPad.toData();
+                            if (data) {
+                                data.pop(); // remove the last dot or line
+                                myPad.fromData(data);
+                                sendData(myPad.toDataURL("image/png"),  data)//reducer紀錄上一步的動作
+                            }
+                        }}>上一步</HospButton>
+                    </div>
+
+                    <div className='rightBtnBox'>
+                        {
+                            completeButton
                         }
-                    }}>復原</HospButtom>
-                                 
+                    </div>
                 </div>
-            </div>
+            </SignPad>
         </div>
     )
     
