@@ -31,6 +31,7 @@ const MyApp = ()=> {
     
     const [openMesg, setOpenMesg] = useState(false)
     const [openMesgModal, setOpenMesgModal] = useState(false)
+    const [sendSwitch, setSendSwitch] = useState(true)
     useEffect(()=>{
         if(openMesg !=""){
             setOpenMesgModal(true)
@@ -300,7 +301,9 @@ const MyApp = ()=> {
 
                 <MesgModalBox style={{ display:(openMesgModal?"flex":"none") }}>
                     <div className="modal">
-                        {openMesg}                   
+                        <div className='alertTxt'>
+                            {openMesg}                   
+                        </div>
                         <HospButton className='signComplete' 
                             onClick={()=>{ 
                                 setOpenMesg("")
@@ -313,6 +316,7 @@ const MyApp = ()=> {
                 
                 {
                     sign != "" && 
+                    sendSwitch && 
                     <div style={{ display:"flex", justifyContent:"center" }}>
                         <HospButton
                             className="submit" 
@@ -329,34 +333,36 @@ const MyApp = ()=> {
                                 }
 
                                 if(hospName ==""){
-                                    alert("您還沒有填寫 院所名稱")
+                                    setOpenMesg("您還沒有填寫 院所名稱")
                                     return
                                 }
 
                                 if(hospContact ==""){
-                                    alert("您還沒有填寫 院所聯絡人/窗口")
+                                    setOpenMesg("您還沒有填寫 院所聯絡人/窗口")
                                     return
                                 }
 
                                 if(hospPhone ==""){
-                                    alert("您還沒有填寫 院所聯絡人/連絡電話")
+                                    setOpenMesg("您還沒有填寫 院所聯絡人/連絡電話")
                                     return
                                 }
                                 
                                 if(hospCounty ==""){
-                                    alert("您還沒有選擇 院所所在縣市")
+                                    setOpenMesg("您還沒有選擇 院所所在縣市")
                                     return
                                 }
                                 
 
                                 for(let qz of qzData ){
                                     if(qz.result == ""){
-                                        alert("您還有題目尚未作答喔!")
+                                        setOpenMesg("您還有題目尚未作答喔!")
                                         return
                                     }
                                 }
 
                             
+                                //檢查完成
+                                setSendSwitch(false)
 
                                 let newPostData = {
                                     user_name: userName,
@@ -369,18 +375,6 @@ const MyApp = ()=> {
                                     qz2:qzData[1].result,
                                     qz3:qzData[2].result,
                                     qz4:qzData[3].result
-                                    /*qzs:[(
-                                        qzData.map(qz=>{
-                                            let newQz ={
-                                                qid:qz.qid,
-                                                ans:qz.result,
-                                            }
-                                            if( qz.result.match("other") && qz.other !=""){
-                                                newQz.other = qz.other 
-                                            }
-                                            return newQz
-                                        })
-                                    )]*/
                                 }
 
                                 if( qzData[3].result.match("other") && qzData[3].other !=""){
@@ -388,6 +382,26 @@ const MyApp = ()=> {
                                 }
 
                                 setPostData(newPostData)
+
+                                fetch('https://api.bit2.com.tw/Meningitis/getQuesData.ashx',{
+                                    method: 'POST',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(postData),
+                                    mode: 'cors'
+                                }).then((response) => {
+                                    if (response.ok) {
+                                        return response.json()
+                                    } 
+                                }).then(result => {
+                                    console.log(result)
+                                    setSendSwitch(true)
+                                }).catch((error) => {
+                                    console.error(error);
+                                    setSendSwitch(true)
+                                });
                             }}
                         >
                             送出

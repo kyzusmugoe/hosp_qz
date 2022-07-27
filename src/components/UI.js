@@ -362,9 +362,19 @@ export const MesgModalBox = styled('div')`
     
     .modal{
         background-color: #fff;
-        width: 100%;
+        width: calc(100% - 50px);
+        padding: 20px;
+        border-radius: 10px;
         max-width: 600px;
-        z-index: 1;        
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        .alertTxt{
+            color: #f20;
+            margin: 20px;
+            font-size: 1.4em;
+        }       
     }
 
     &::before{
